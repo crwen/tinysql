@@ -33,6 +33,17 @@ func TestT(t *testing.T) {
 	TestingT(t)
 }
 
+func TestDecodeRowKey(t *testing.T) {
+	key := EncodeRowKeyWithHandle(1, 2)
+	tid, h, _ := DecodeRecordKey(key)
+	fmt.Println(tid, h)
+
+	key = EncodeIndexSeekKey(1, 2, []byte("hello world"))
+	tableId, indexID, values, _ := DecodeIndexKeyPrefix(key)
+	fmt.Println(tableId, indexID, string(values))
+
+}
+
 var _ = Suite(&testTableCodecSuite{})
 
 type testTableCodecSuite struct{}
