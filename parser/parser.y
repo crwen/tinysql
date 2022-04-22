@@ -3819,7 +3819,15 @@ JoinTable:
          * }
          *
 	 */
-
+|	TableRef JoinType "JOIN" TableRef "ON" Expression %prec tableRefPriority
+	    {
+		$$ = &ast.Join{
+		    Left: $1.(ast.ResultSetNode),   // 这里取出第1个部分TableRef的值作为Left
+		    Right: $4.(ast.ResultSetNode),  // 这里取出第4个部分TableRef的值作为Right
+		    Tp: $2.(ast.JoinType),          // 这里取出第2部分的JoinType的值作为Tp
+		    On: &ast.OnCondition{Expr: $6.(ast.ExprNode)}, // 这里是我们新增的部分，标识条件，即第6部分Expression的值
+		}
+	    }
 JoinType:
 	"LEFT"
 	{
